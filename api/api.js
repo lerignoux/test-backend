@@ -2,11 +2,13 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+var bodyParser = require('body-parser')
+app.use(bodyParser.json());
+
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const options = {
   definition: {
-    //openapi: '3.0.0',
     basePath: '/api/v1',
     info: {
       title: 'Wiredcraft test backend api', // Title (required)
