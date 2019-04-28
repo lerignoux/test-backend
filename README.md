@@ -10,6 +10,9 @@ You can found my Strategy answer document from the [Strategy summary](Strategy.m
 docker-compose up -d
 ```
 
+### Warning
+There seem to be a weird bug with the docker-hub built container, `express` does not seem to be correctly installed. If that happen you will need to re-do a `npm install` on the local container in order to get the API running.
+
 ## Setup
 ensure you have docker and docker-compose installed.  
 fetch the repository  
