@@ -4,7 +4,7 @@ services:
 
   wiredcraft-api:
     container_name: wiredcraft-api
-    image: lerignoux/wiredcraft-test-backen
+    image: lerignoux/wiredcraft-test-backend
     networks:
       - wiredcraft
     depends_on:
