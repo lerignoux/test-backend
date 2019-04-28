@@ -137,89 +137,128 @@ module.exports.setup = function(app) {
   })
 
   /**
-   * @swagger
-   *
-   * /users:
-   *   get:
-   *     description: Fetch a user
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - id: userId
-   *         description: UserId of the user to fetch.
-   *         in: path
-   *         required: true
-   *         type: string
-   *     responses:
-   *       200:
-   *         description: user found
-   *         schema:
-   *           type: object
-   *           $ref: '#/definitions/User'
-   *       404:
-   *          description: user not found
-   */
+  * @swagger
+  *
+  * /users/{id}:
+  *   get:
+  *     description: Fetch a user
+  *     produces:
+  *       - application/json
+  *     parameters:
+  *       - name: id
+  *         description: User Id of the user to fetch.
+  *         in: path
+  *         required: true
+  *         type: string
+  *     responses:
+  *       200:
+  *         description: user found
+  *         schema:
+  *           type: object
+  *           $ref: '#/definitions/User'
+  *       404:
+  *          description: user not found
+  *       500:
+  *          description: internal server error
+  *       504:
+  *          description: Gateway timeout
+  */
   app.get('/users/:id', (req, res) => {
-    var userId = req.params.id;
-    res.send('Ok');
+    try {
+      var userId = models.uuidFromString(req.params.id);
+    }
+    catch (err) {
+      res.status(400).send(`Invalid uuid format: ${req.params.id}, it should be 00000000-0000-0000-0000-000000000000`)
+      return
+    }
+    returnUser(userId, res);
   })
 
   /**
-   * @swagger
-   *
-   * /users:
-   *   put:
-   *     description: Update a user
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - id: userId
-   *         description: UserId of the user to update.
-   *         in: path
-   *         required: true
-   *         type: string
-   *     responses:
-   *       200:
-   *         description: updated user
-   *         schema:
-   *           type: object
-   *           $ref: '#/definitions/User'
-   *       400:
-   *         description: Bad request, The payload is incorrect
-   *       404:
-   *          description: user not found
-   */
-   app.put('/users/:id', (req, res) => {
-     // Update a User
-    res.send('Ok');
+  * @swagger
+  *
+  * /users/{id}:
+  *   put:
+  *     description: Update a user
+  *     produces:
+  *       - application/json
+  *     parameters:
+  *       - name: id
+  *         description: User Id of the user to update.
+  *         in: path
+  *         required: true
+  *         type: string
+  *     responses:
+  *       200:
+  *         description: updated user
+  *         schema:
+  *           type: object
+  *           $ref: '#/definitions/User'
+  *       400:
+  *         description: Bad request, The payload (user parameters) is incorrect
+  *       404:
+  *          description: user not found
+  *       500:
+  *          description: internal server error
+  *       504:
+  *          description: Gateway timeout
+  */
+  app.put('/users/:id', (req, res) => {
+    // Update a User
+    var userId = models.uuidFromString(req.params.id);
+    var update = new UserModel(req.body);
+    if (update.id !== undefined) {
+      res.status(400).send(`Invalid update parameters for user ${userId}`)
+    }
+    models.instance.Person.updateAsync({id: userId}, update)
+      .then(function() {
+        returnUser(userId, res);
+      })
+      .catch(function(err){
+          console.log(err);
+          res.status(400).send(`Invalid update parameters for user ${userId}`)
+      });
   });
 
   /**
-   * @swagger
-   *
-   * /users:
-   *   delete:
-   *     description: Delete a user
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - id: user to delete
-   *         description: UserId of the user to delete.
-   *         in: path
-   *         required: true
-   *         type: string
-   *     responses:
-   *       200:
-   *         description: user deleted
-   *         schema:
-   *           type: object
-   *           $ref: '#/definitions/User'
-   *       404:
-   *          description: user not found
-   */
-   app.delete('/users/:id', (req, res) => {
-     // Delete a User
-    res.send('Ok');
+  * @swagger
+  *
+  * /users/{id}:
+  *   delete:
+  *     description: Delete a user
+  *     produces:
+  *       - application/json
+  *     parameters:
+  *       - name: id
+  *         description: User Id of the user to delete.
+  *         in: path
+  *         required: true
+  *         type: string
+  *     responses:
+  *       200:
+  *         description: user deleted
+  *         schema:
+  *           type: object
+  *           $ref: '#/definitions/User'
+  *       400:
+  *          description: Bad request, The payload is incorrect
+  *       404:
+  *          description: user not found
+  *       500:
+  *          internal server error
+  *       504:
+  *          description: Gateway timeout
+  */
+  app.delete('/users/:id', (req, res) => {
+    var userId = models.uuidFromString(req.params.id);
+    models.instance.Person.deleteAsync({id: userId})
+      .then(function() {
+        returnUser(userId, res);
+      })
+      .catch(function(err){
+         console.log(err);
+         res.status(404).send(`could not delete user ${userId}`)
+      });
   });
 
 };
