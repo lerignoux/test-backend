@@ -29,9 +29,7 @@ the api is then accessible at [http://localhost:1080/api/v1](http://localhost:10
 
 ### Documentation
 The api documentation is available as a swagger at:
-```
 [http://localhost:1080/api/v1/documentation](http://localhost:1080/api/v1/documentation)
-```
 
 ### Test run
 In order to run the test suite:
