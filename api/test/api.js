@@ -2,9 +2,7 @@ var supertest = require("supertest");
 var should = require("should");
 var api = require('../api.js');
 
-// This agent refers to PORT where program is runninng.
 var server = supertest.agent("http://localhost:3000");
-
 // UNIT test begin
 
 describe("Testing the user api",function(){
@@ -25,3 +23,5 @@ describe("Testing the user api",function(){
   });
 
 });
+
+process.exit()
