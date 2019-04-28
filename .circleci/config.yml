@@ -1,36 +1,24 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
 jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:7.10
+      - image: circleci/node:9.9
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/api
+    working_directory: ~
 
     steps:
       - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "api/package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      - setup_remote_docker
 
-      - run: npm --prefix api install
+      - run:
+          name: build the containers
+          command: docker-compose -f docker-compose-test.yml build
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "api/package.json" }}
+      - run:
+          name: setup the environement
+          command: docker-compose -f docker-compose-test.yml up -d
 
-      # run tests!
-      - run: npm --prefix api run test
+      - run:
+          name: run tests
+          command: docker run -it --rm --name wiredcraft-test-backend-tests -v /home/circleci/project/api:/app wiredcraft-api npm run test
