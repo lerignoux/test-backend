@@ -24,6 +24,9 @@ see [draw.io diagram](https://www.draw.io/#Uhttps://raw.githubusercontent.com/le
 ## Components:
 ----
 ### API
+
+I designed the user API as requested, though I was surprised to not see any reference to the wechat user. Indeed since the User log in using a wechat account, some information (wechat id) should probably be saved in the User Database (in order to link the user logging in and his DB record)
+
 ###### Technology stack
 The API is served via docker containers.  
 The API is implemented in java-script using Node [ExpressJs](https://expressjs.com/).  
