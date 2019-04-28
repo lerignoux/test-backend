@@ -4,10 +4,7 @@ services:
 
   wiredcraft-api:
     container_name: wiredcraft-api
-    build:
-      context: ./api/
-      dockerfile: Dockerfile
-    image: wiredcraft-api
+    image: lerignoux/wiredcraft-test-backen
     networks:
       - wiredcraft
     depends_on:
