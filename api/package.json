@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node api.js",
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Erignoux Laurent",
   "license": "ISC",
@@ -15,11 +17,13 @@
     "express-cassandra": "^2.3.0",
     "js-yaml": "^3.13.1",
     "swagger-jsdoc": "^3.2.9",
-    "swagger-ui-express": "^4.0.2"
+    "swagger-ui-express": "^4.0.2",
+    "snyk": "^1.192.0"
   },
   "devDependencies": {
     "mocha": "^6.1.4",
     "should": "^13.2.3",
     "supertest": "^4.0.2"
-  }
+  },
+  "snyk": true
 }
